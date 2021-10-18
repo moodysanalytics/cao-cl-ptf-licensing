@@ -11,10 +11,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -159,7 +159,7 @@ namespace Standard.Licensing
                 {
                     return null;
                 }
-                
+
                 return new LicenseAttributes(xmlElement, "Attribute");
             }
         }
@@ -169,14 +169,14 @@ namespace Standard.Licensing
         /// Use this property to set the expiration date for a trial license
         /// or the expiration of support & subscription updates for a standard license.
         /// </summary>
-        public DateTime Expiration
+        public DateTimeOffset Expiration
         {
             get
             {
                 return
-                    DateTime.ParseExact(
+                    DateTimeOffset.ParseExact(
                         GetTag("Expiration") ??
-                        DateTime.MaxValue.ToUniversalTime().ToString("r", CultureInfo.InvariantCulture)
+                        DateTimeOffset.MaxValue.ToUniversalTime().ToString("r", CultureInfo.InvariantCulture)
                         , "r", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             }
             set { if (!IsSigned) SetTag("Expiration", value.ToUniversalTime().ToString("r", CultureInfo.InvariantCulture)); }
@@ -307,17 +307,17 @@ namespace Standard.Licensing
         /// <summary>
         /// Serialize this <see cref="License"/> to a <see cref="Stream"/>.
         /// </summary>
-        /// <param name="stream">A <see cref="Stream"/> that the 
+        /// <param name="stream">A <see cref="Stream"/> that the
         /// <see cref="License"/> will be written to.</param>
         public void Save(Stream stream)
         {
             xmlData.Save(stream);
         }
-        
+
         /// <summary>
         /// Serialize this <see cref="License"/> to a <see cref="TextWriter"/>.
         /// </summary>
-        /// <param name="textWriter">A <see cref="TextWriter"/> that the 
+        /// <param name="textWriter">A <see cref="TextWriter"/> that the
         /// <see cref="License"/> will be written to.</param>
         public void Save(TextWriter textWriter)
         {
@@ -327,7 +327,7 @@ namespace Standard.Licensing
         /// <summary>
         /// Serialize this <see cref="License"/> to a <see cref="XmlWriter"/>.
         /// </summary>
-        /// <param name="xmlWriter">A <see cref="XmlWriter"/> that the 
+        /// <param name="xmlWriter">A <see cref="XmlWriter"/> that the
         /// <see cref="License"/> will be written to.</param>
         public void Save(XmlWriter xmlWriter)
         {
