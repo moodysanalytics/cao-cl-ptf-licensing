@@ -1,0 +1,33 @@
+name: Pull Request Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+env:
+  SOLUTION: src/Standard.Licensing.sln
+
+jobs:
+  push:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core CLI
+      uses: actions/setup-dotnet@v1
+
+    - name: Setup GPR
+      run: dotnet nuget add source https://nuget.pkg.github.com/moodysanalytics/index.json -n GPR -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+
+    - name: Build
+      run: |
+        $Branch = "${{ github.ref }}" -replace '(refs/tags/)(.+)', '$2'
+        $VERSION = Get-Content 'version' -TotalCount 1
+        $PACKAGE_VERSION = "$VERSION-build.${{ github.run_number }}"
+        Write-Output "Generating Package with version: $PACKAGE_VERSION ..."
+        dotnet pack BvdRestApiClientSdk.sln -o dist -p:Configuration=Release -p:Version=$VERSION -p:PackageVersion=$PACKAGE_VERSION -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Branch -p:RepositoryCommit=${{ github.sha }}
+        dotnet nuget push dist\*.nupkg --source GPR

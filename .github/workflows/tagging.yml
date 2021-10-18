@@ -1,0 +1,33 @@
+name: Release Tagging
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  SOLUTION: src/Standard.Licensing.sln
+
+jobs:
+  tagging:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core CLI
+      uses: actions/setup-dotnet@v1
+
+    - name: Setup GPR
+      run: dotnet nuget add source https://nuget.pkg.github.com/moodysanalytics/index.json -n GPR -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+
+    - name: Build
+      run: |
+        $Tag = "${{ github.ref }}" -replace '(refs/tags/)(.+)', '$2'
+        $Version = $Tag -replace '((\d+)(\.\d+){1,3})(-.+|)', '$1'
+        $InformationalVersion = "$Tag SHA-${{ github.SHA }}"
+        $ProductVersion = "$InformationalVersion"
+        $PackageVersion = $Tag
+        dotnet pack BvdRestApiClientSdk.sln -o dist -p:Configuration=Release -p:Version=$Version -p:PackageVersion=$PackageVersion -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Tag -p:RepositoryCommit=${{ github.sha }}
+        dotnet nuget push dist\*.nupkg --source GPR
