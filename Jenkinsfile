@@ -103,6 +103,7 @@ pipeline {
 							"""
 					} else {
 						powershell """
+                            git submodule init
                             \$VERSION = Get-Content 'version' -TotalCount 1
                             \$PACKAGE_VERSION = "\$VERSION"
                             Write-Output "Generating Package with version: \$PACKAGE_VERSION ..."
