@@ -31,5 +31,5 @@ jobs:
         $VERSION = Get-Content 'version' -TotalCount 1
         $PACKAGE_VERSION = "$VERSION-build.${{ github.run_number }}"
         Write-Output "Generating Package with version: $PACKAGE_VERSION ..."
-        dotnet pack BvdRestApiClientSdk.sln -o dist -p:Configuration=Release -p:Version=$VERSION -p:PackageVersion=$PACKAGE_VERSION -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Branch -p:RepositoryCommit=${{ github.sha }}
+        dotnet pack '${{ env.SOLUTION }}' -o dist -p:Configuration=Release -p:Version=$VERSION -p:PackageVersion=$PACKAGE_VERSION -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Branch -p:RepositoryCommit=${{ github.sha }}
         dotnet nuget push dist\*.nupkg --source GPR
