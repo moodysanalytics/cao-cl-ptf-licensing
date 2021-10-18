@@ -31,5 +31,5 @@ jobs:
         $InformationalVersion = "$Tag SHA-${{ github.SHA }}"
         $ProductVersion = "$InformationalVersion"
         $PackageVersion = $Tag
-        dotnet pack BvdRestApiClientSdk.sln -o dist -p:Configuration=Release -p:Version=$Version -p:PackageVersion=$PackageVersion -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Tag -p:RepositoryCommit=${{ github.sha }}
+        dotnet pack '${{ env.SOLUTION }}' -o dist -p:Configuration=Release -p:Version=$Version -p:PackageVersion=$PackageVersion -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Tag -p:RepositoryCommit=${{ github.sha }}
         dotnet nuget push dist\*.nupkg --source GPR
