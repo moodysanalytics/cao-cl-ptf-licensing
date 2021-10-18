@@ -104,9 +104,9 @@ pipeline {
 					} else {
 						powershell """
                             $VERSION = Get-Content 'version' -TotalCount 1
-                            $PACKAGE_VERSION = "$VERSION-build.${{ github.run_number }}"
+                            $PACKAGE_VERSION = "$VERSION"
                             Write-Output "Generating Package with version: $PACKAGE_VERSION ..."
-                            dotnet pack '${{ env.SOLUTION }}' -o dist /p:DebugSymbols=false /p:DebugType=none /p:Optimize=true -p:Configuration=Release -p:Version=$VERSION -p:PackageVersion=$PACKAGE_VERSION -p:RepositoryType=git -p:RepositoryUrl=https://github.com/${{ github.repository }}.git -p:RepositoryBranch=$Branch -p:RepositoryCommit=${{ github.sha }}
+                            dotnet pack '${{ env.SOLUTION }}' -o dist /p:DebugSymbols=false /p:DebugType=none /p:Optimize=true -p:Configuration=Release -p:Version=$VERSION -p:PackageVersion=$PACKAGE_VERSION
                             dotnet nuget push dist\\*.nupkg --source http://sf1-wbroci101.analytics.moodys.net/NuGet/
 							"""
 					}
